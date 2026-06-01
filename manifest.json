@@ -1,0 +1,14 @@
+{
+  "name": "Valkyrie (T-Watch S3)",
+  "version": "2.8.0",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32-S3",
+      "improv": false,
+      "parts": [
+        { "path": "valkyrie-t-watch-s3.factory.bin", "offset": 0 }
+      ]
+    }
+  ]
+}

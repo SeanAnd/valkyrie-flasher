@@ -1,0 +1,16 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local preview / generated artifacts
+shot-*.png
+.preview-*.png
+*.log
+*.tmp
+
+# Dependency folders if a local helper tool is used
+node_modules/

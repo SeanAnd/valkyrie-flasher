@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#03070d" />
+    <title>Valkyrie - Web Flasher for the LilyGO T-Watch S3</title>
+    <meta
+      name="description"
+      content="Flash Valkyrie firmware onto your LilyGO T-Watch S3 right from your browser. Scan for sketchy BLE and Wi-Fi devices, track signals, wardrive and level up."
+    />
+
+    <!-- Open Graph / social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Valkyrie Web Flasher (T-Watch S3)" />
+    <meta
+      property="og:description"
+      content="Flash Valkyrie from your browser and turn a T-Watch S3 into a tiny threat scanner for sketchy BLE and Wi-Fi signals."
+    />
+
+    <link rel="icon" href="animations/bleScanning/idle.png" type="image/png" />
+
+    <!-- Mark JS as available so scroll-reveal content stays visible without it -->
+    <script>
+      document.documentElement.classList.add("js");
+    </script>
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- ESP Web Tools handles connect / logs & console / flashing in its own dialog -->
+    <script
+      type="module"
+      src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"
+    ></script>
+  </head>
+
+  <body>
+    <!-- ============================ NAV ============================ -->
+    <header class="nav">
+      <div class="container nav__inner">
+        <a class="brand" href="#top">
+          <img
+            class="brand__sprite pixel"
+            src="animations/bleScanning/idle.png"
+            alt=""
+            width="30"
+            height="30"
+          />
+          <span class="brand__name"><b>VALK</b>YRIE</span>
+        </a>
+        <span class="nav__spacer"></span>
+        <span class="nav__version" data-version>Firmware</span>
+        <a
+          class="nav__link"
+          href="https://github.com/SeanAnd/T-Watch-Valkyrie"
+          target="_blank"
+          rel="noopener"
+          >Source ↗</a
+        >
+      </div>
+    </header>
+
+    <main id="top">
+      <!-- ============================ HERO ============================ -->
+      <section class="hero">
+        <div class="container hero__grid">
+          <div class="hero__copy">
+            <h1 class="hero__title">Valkyrie</h1>
+            <p class="hero__tag">// Waifu for the T-Watch S3</p>
+            <p class="hero__desc">
+              Valkyrie turns a LilyGO T-Watch S3 into a tiny BLE and Wi-Fi
+              watchdog. It spots stuff like trackers, Flipper Zero, card
+              skimmers, Flock cameras and drone fingerprints, then makes the
+              whole thing feel like a little RPG on your wrist. Plug it in,
+              hit flash and let the magic smoke stay inside the watch.
+              She scan, she exp, but most of all, she protecc.
+            </p>
+
+            <div class="hero__cta">
+              <esp-web-install-button manifest="manifest.json">
+                <button slot="activate" class="btn-primary" type="button">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z" />
+                  </svg>
+                  Flash Valkyrie
+                </button>
+                <span slot="unsupported" class="ewt-msg">
+                  Your browser can't flash over USB. Open this page in desktop
+                  <b>Chrome</b>, <b>Edge</b> or <b>Opera</b> (Web Serial is not
+                  available in Safari or Firefox).
+                </span>
+                <span slot="not-allowed" class="ewt-msg">
+                  Flashing needs a secure connection. Open this page over
+                  <b>https://</b> (or <code>http://localhost</code>).
+                </span>
+              </esp-web-install-button>
+
+              <a class="btn-secondary" href="#how">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 16v-4M12 8h.01" />
+                </svg>
+                Quick start
+              </a>
+            </div>
+
+            <p class="hero__note">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4M12 8h.01" />
+              </svg>
+              <span>
+                Use desktop Chrome, Edge or Opera. Connect the watch with a USB
+                data cable, click Flash Valkyrie and pick the serial port. The
+                ESP Web Tools dialog also has Logs &amp; Console when you want
+                to see what the watch is saying.
+              </span>
+            </p>
+          </div>
+
+          <!-- Interactive watch demo -->
+          <div class="hero__visual">
+            <div class="watch-demo" data-watch-demo>
+              <div class="watch">
+                <div class="watch__screen">
+                  <div class="watch__statusbar">
+                    <span class="batt">
+                      <svg
+                        width="14"
+                        height="9"
+                        viewBox="0 0 26 14"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        aria-hidden="true"
+                      >
+                        <rect x="1" y="1" width="20" height="12" rx="2" />
+                        <rect x="3" y="3" width="16" height="8" rx="1" fill="currentColor" />
+                        <path d="M24 5v4" stroke-linecap="round" />
+                      </svg>
+                      100%
+                    </span>
+                    <span class="watch__title" data-watch-title>Valkyrie</span>
+                    <span data-watch-clock>11:37p</span>
+                  </div>
+                  <div class="watch__body">
+                    <img
+                      class="watch__sprite pixel"
+                      data-watch-sprite
+                      src="animations/bleScanning/scanBleLoop1.png"
+                      alt="Valkyrie watch character"
+                      width="112"
+                      height="112"
+                    />
+                    <div class="watch__status-line" data-watch-status></div>
+                    <div class="watch__hint" data-watch-hint></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="state-chips" role="group" aria-label="Watch states">
+                <button class="chip" type="button" data-state="ble">BLE scan</button>
+                <button class="chip" type="button" data-state="wifi">Wi-Fi scan</button>
+                <button class="chip" type="button" data-state="heartbeat">Heartbeat</button>
+                <button class="chip" type="button" data-state="wardrive">Wardrive</button>
+                <button class="chip" type="button" data-state="sleeping">Sleeping</button>
+              </div>
+
+              <div class="watch-demo__caption" data-watch-caption aria-live="polite">
+                <h3></h3>
+                <p></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================ HOW TO FLASH ============================ -->
+      <section class="section" id="how">
+        <div class="container">
+          <p class="section__eyebrow">Get started</p>
+          <h2 class="section__title">Flash it without the drama</h2>
+          <p class="section__lead">
+            No PlatformIO, no terminal arcana, no “which Python is this?”
+            side quest. Just a browser, a cable and the watch.
+          </p>
+
+          <div class="steps">
+            <article class="step fade-in">
+              <h3>Plug in the watch</h3>
+              <p>
+                Connect your T-Watch S3 with a USB data cable. Different watch
+                versions use different connectors, so the only real rule is:
+                make sure the cable can do data, not just charging.
+              </p>
+            </article>
+            <article class="step fade-in">
+              <h3>Click Flash Valkyrie</h3>
+              <p>
+                Open this page in desktop Chrome, Edge or Opera, then smash the
+                <b>Flash Valkyrie</b> button up top.
+              </p>
+            </article>
+            <article class="step fade-in">
+              <h3>Pick the serial port</h3>
+              <p>
+                Choose the watch from the browser popup. If it does not show up,
+                try another port, another cable or unplug and plug it back in.
+              </p>
+            </article>
+            <article class="step fade-in">
+              <h3>Wait for the install</h3>
+              <p>
+                Let it finish before touching anything. Once it reboots, use
+                <b>Logs &amp; Console</b> in the same dialog if you want to watch
+                the little nerd boot up.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================ FEATURES ============================ -->
+      <section class="section" id="features">
+        <div class="container">
+          <p class="section__eyebrow">What it does</p>
+          <h2 class="section__title">What you get on the watch</h2>
+          <p class="section__lead">
+            Valkyrie uses the radios already in the T-Watch S3. BLE runs on
+            NimBLE, Wi-Fi hops the common channels and the scan cycle stays
+            power-aware so the watch is not melting itself for sport.
+          </p>
+
+          <div class="features">
+            <article class="feature fade-in">
+              <div class="feature__icon">
+                <img
+                  class="pixel js-sprite"
+                  data-frames="animations/bleScanning/scanBleLoop1.png,animations/bleScanning/scanBleLoop2.png,animations/bleScanning/scanBleLoop3.png"
+                  data-fps="6"
+                  src="animations/bleScanning/scanBleLoop1.png"
+                  alt=""
+                  width="52"
+                  height="52"
+                />
+              </div>
+              <h3>BLE threat scanning</h3>
+              <p>
+                Watches for AirTag / Find My trackers, Flipper Zero, HC-03/05/06
+                skimmers, Flock cameras, Meta Ray-Ban / Quest gear and BLE
+                RemoteID. AirTags get extra checks so one random ping does not
+                become panic theater.
+              </p>
+              <div class="feature__tags">
+                <span class="tag">AirTag</span>
+                <span class="tag">Flipper</span>
+                <span class="tag">Skimmers</span>
+                <span class="tag">Meta</span>
+              </div>
+            </article>
+
+            <article class="feature fade-in">
+              <div class="feature__icon">
+                <img
+                  class="pixel js-sprite"
+                  data-frames="animations/wifiScanning/scanWifiLoop1.png,animations/wifiScanning/scanWifiLoop2.png,animations/wifiScanning/scanWifiLoop3.png"
+                  data-fps="6"
+                  src="animations/wifiScanning/scanWifiLoop1.png"
+                  alt=""
+                  width="52"
+                  height="52"
+                />
+              </div>
+              <h3>Wi-Fi threat pass</h3>
+              <p>
+                Hops channels 1, 6 and 11 looking for deauth, disassoc, EAPOL,
+                Pwnagotchi-style beacons, Pineapple-ish gear, Flock signals and
+                OpenDroneID / RemoteID drone fingerprints.
+              </p>
+              <div class="feature__tags">
+                <span class="tag">Deauth</span>
+                <span class="tag">EAPOL</span>
+                <span class="tag">Pwnagotchi</span>
+                <span class="tag">Drones</span>
+              </div>
+            </article>
+
+            <article class="feature fade-in">
+              <div class="feature__icon">
+                <img
+                  class="pixel js-sprite"
+                  data-frames="animations/heartbeat/heartbeatLoop1.png,animations/heartbeat/heartbeatLoop2.png,animations/heartbeat/heartbeatLoop3.png,animations/heartbeat/heartbeatLoop4.png,animations/heartbeat/heartbeatLoop5.png,animations/heartbeat/heartbeatLoop6.png"
+                  data-fps="7"
+                  src="animations/heartbeat/heartbeatLoop1.png"
+                  alt=""
+                  width="52"
+                  height="52"
+                />
+              </div>
+              <h3>Heartbeat tracking</h3>
+              <p>
+                Open a threat and follow the live RSSI like a weird little
+                treasure hunt. The filtering keeps the beeps and sprite from
+                getting too jumpy while you move around.
+              </p>
+              <div class="feature__tags">
+                <span class="tag">Live RSSI</span>
+                <span class="tag">Proximity</span>
+              </div>
+            </article>
+
+            <article class="feature fade-in">
+              <div class="feature__icon">
+                <img
+                  class="pixel js-sprite"
+                  data-frames="animations/wardriving/wardriveLoop1.png,animations/wardriving/wardriveLoop2.png,animations/wardriving/wardriveLoop3.png"
+                  data-fps="6"
+                  src="animations/wardriving/wardriveLoop1.png"
+                  alt=""
+                  width="52"
+                  height="52"
+                />
+              </div>
+              <h3>Wardrive mode</h3>
+              <p>
+                Walk, ride or drive around and log nearby networks to Wigle 1.6
+                CSVs under <code>/valkyrie/wardrive/</code>. It can use onboard,
+                fixed or fresh phone position, then hands out XP when you stop.
+              </p>
+              <div class="feature__tags">
+                <span class="tag">Wigle CSV</span>
+                <span class="tag">GPS</span>
+                <span class="tag">Passive</span>
+              </div>
+            </article>
+
+            <article class="feature fade-in">
+              <div class="feature__icon">
+                <img
+                  class="pixel js-sprite"
+                  data-frames="animations/sleeping/startSleepLoop1.png,animations/sleeping/startSleepLoop2.png,animations/sleeping/startSleepLoop3.png"
+                  data-fps="5"
+                  src="animations/sleeping/startSleepLoop1.png"
+                  alt=""
+                  width="52"
+                  height="52"
+                />
+              </div>
+              <h3>Unified XP &amp; leveling</h3>
+              <p>
+                Threat finds, wardrive sessions and mesh participation all feed
+                the same <b>Lvl / Exp / Req</b> track. Completely unnecessary,
+                extremely correct.
+              </p>
+              <div class="feature__tags">
+                <span class="tag">Threats</span>
+                <span class="tag">Wardrive</span>
+                <span class="tag">Mesh</span>
+              </div>
+            </article>
+
+            <article class="feature fade-in">
+              <div class="feature__icon">
+                <img
+                  class="pixel js-sprite"
+                  data-frames="animations/bleScanning/idle.png,animations/bleScanning/startBleScan1.png"
+                  data-fps="2"
+                  src="animations/bleScanning/idle.png"
+                  alt=""
+                  width="52"
+                  height="52"
+                />
+              </div>
+              <h3>Logging, alerts &amp; control</h3>
+              <p>
+                Threats go into <code>/valkyrie/threats.log</code>, the watch
+                gives you one buzz per scan window and a paired phone can get
+                notified. You can toggle BLE, Wi-Fi, threat types and ignored
+                devices from the watch.
+              </p>
+              <div class="feature__tags">
+                <span class="tag">CSV log</span>
+                <span class="tag">Haptics</span>
+                <span class="tag">Ignore list</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+    <!-- ============================ FOOTER ============================ -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer__grid">
+          <div>
+            <h4>Valkyrie</h4>
+            <p class="footer__about">
+              A T-Watch S3 firmware fork for people who want their watch to do
+              weird radio goblin things and still look cool doing it.
+            </p>
+            <a
+              class="btn-secondary"
+              href="https://github.com/SeanAnd/T-Watch-Valkyrie"
+              target="_blank"
+              rel="noopener"
+              >View the firmware ↗</a
+            >
+          </div>
+
+          <div>
+            <h4>Requirements</h4>
+            <ul>
+              <li>Desktop Chrome, Edge or Opera</li>
+              <li>Served over HTTPS (Web Serial)</li>
+              <li>A USB data cable</li>
+              <li>LilyGO T-Watch S3 (ESP32-S3)</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4>No Web Serial?</h4>
+            <ul>
+              <li>Safari / Firefox / iOS are unsupported</li>
+              <li>Use the Windows <code>flash-valkyrie.bat</code> package</li>
+              <li>Or flash from another machine</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer__bottom">
+          <span data-version-full>Valkyrie firmware</span>
+          <span>Built on ESP Web Tools &middot; flashes right from your browser</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>
