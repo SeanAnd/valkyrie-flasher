@@ -73,7 +73,7 @@ const WATCH_STATES = {
     title: "Valkyrie",
     intro: seq("animations/bleScanning", "startBleScan", 5),
     loop: seq("animations/bleScanning", "scanBleLoop", 3),
-    fps: 6,
+    fps: 3,
     status: 'Status: <span class="accent">Scanning BLE</span>',
     hint: "Detection: On · threat goblin active",
     caption: {
@@ -85,7 +85,7 @@ const WATCH_STATES = {
     title: "Valkyrie",
     intro: seq("animations/wifiScanning", "startWifiScan", 5),
     loop: seq("animations/wifiScanning", "scanWifiLoop", 3),
-    fps: 6,
+    fps: 3,
     status: 'Status: <span class="accent">Scanning Wi-Fi</span>',
     hint: "Channels 1 / 6 / 11",
     caption: {
@@ -97,7 +97,7 @@ const WATCH_STATES = {
     title: "Heartbeat",
     intro: seq("animations/heartbeat", "startHeartbeatScan", 5),
     loop: seq("animations/heartbeat", "heartbeatLoop", 6),
-    fps: 7,
+    fps: 4,
     status: 'RSSI: <span class="accent">-88 dBm</span> · Weak',
     hint: "Tap screen to stop",
     caption: {
@@ -109,7 +109,7 @@ const WATCH_STATES = {
     title: "Wardrive",
     intro: seq("animations/wardriving", "startWardrive", 5),
     loop: seq("animations/wardriving", "wardriveLoop", 3),
-    fps: 6,
+    fps: 3,
     status: 'Networks logged: <span class="accent">231</span>',
     hint: "Writing Wigle CSV · GPS: Phone",
     caption: {
@@ -121,7 +121,7 @@ const WATCH_STATES = {
     title: "Valkyrie",
     intro: seq("animations/sleeping", "startSleep", 5),
     loop: seq("animations/sleeping", "startSleepLoop", 3),
-    fps: 5,
+    fps: 2,
     status: "Status: Sleeping",
     hint: "Resting between scans",
     caption: {
@@ -132,7 +132,7 @@ const WATCH_STATES = {
 };
 
 const STATE_ORDER = ["ble", "wifi", "heartbeat", "wardrive", "sleeping"];
-const AUTO_ADVANCE_MS = 6500;
+const AUTO_ADVANCE_MS = 9000;
 
 function initWatchDemo() {
   const root = document.querySelector("[data-watch-demo]");

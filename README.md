@@ -5,8 +5,9 @@ A zero-install, browser-based flasher and landing page for the
 [ESP Web Tools](https://esphome.github.io/esp-web-tools/). It is a static site
 (no build step) intended for GitHub Pages or any HTTPS static host.
 
-The page shows off what the firmware does with animated pixel-art sprites, then
-lets a visitor flash their watch in four steps.
+The page shows off Valkyrie's BLE / Wi-Fi threat scanning, wardriving,
+Meshtastic mesh participation and RPG-style leveling with animated pixel-art
+sprites, then lets a visitor flash their watch in four steps.
 
 ## Files
 
@@ -47,53 +48,12 @@ Different T-Watch revisions use either micro-USB or USB depending on the
 version, so the instructions just say "a USB data cable." There are no
 connector-specific references to keep in sync.
 
-## The firmware image (self-hosted)
-
-`manifest.json` references the image by relative path, so it must sit next to
-`index.html` in this folder:
-
-```
-valkyrie-t-watch-s3.factory.bin
-```
-
-Since it is served from the same origin as the page, there are no CORS concerns.
-The image is flashed as a single part at offset `0` because the factory image
-already bundles the bootloader, partition table, and app.
-
-### Producing / refreshing the image
-
-The build emits a version-stamped name
-(`firmware-t-watch-s3-valkyrie-<version>.factory.bin`). Build it, then copy it
-into this folder under the stable name the manifest expects:
-
 ```bash
 # from firmware/
 bin/build-esp32.sh t-watch-s3-valkyrie
 cp release/firmware-t-watch-s3-valkyrie-*.factory.bin \
    ../valkyrie-flasher/valkyrie-t-watch-s3.factory.bin
 ```
-
-> Prefer to pull from a GitHub Release instead of committing the binary? Set the
-> manifest `path` to
-> `"https://github.com/SeanAnd/T-Watch-Valkyrie/releases/latest/download/valkyrie-t-watch-s3.factory.bin"`
-> and upload the image to each release under that same name.
-
-## Deploy to GitHub Pages
-
-1. Put these files at the root of a public repo (or in `/docs`).
-2. **Settings → Pages → Deploy from a branch → `main` / `(root)`**.
-3. Open `https://<user>.github.io/<repo>/` in Chrome or Edge on desktop.
-
-GitHub Pages serves HTTPS automatically, which Web Serial requires. The layout
-is mobile-first and responsive, but flashing itself still needs a desktop
-Chromium browser (Web Serial is not available on iOS/Android browsers in the
-same way).
-
-## Updating for a new firmware version
-
-- Rebuild and copy the new image over `valkyrie-t-watch-s3.factory.bin` (keep
-  the same filename) using the commands above.
-- Bump `version` in `manifest.json` so the version badge on the page updates.
 
 ## Requirements / limitations
 
