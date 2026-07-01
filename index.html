@@ -48,6 +48,7 @@
           <span class="brand__name"><b>VALK</b>YRIE</span>
         </a>
         <span class="nav__spacer"></span>
+        <a class="nav__link" href="#logs">Get logs</a>
         <span class="nav__version" data-version>Firmware</span>
         <a
           class="nav__link"
@@ -246,6 +247,64 @@
                 the waifu boot up.
               </p>
             </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================== DOWNLOAD WARDRIVE LOGS ====================== -->
+      <section class="section" id="logs">
+        <div class="container">
+          <p class="section__eyebrow">Get your data</p>
+          <h2 class="section__title">Pull your wardrive logs</h2>
+          <p class="section__lead">
+            Wardrive mode saves Wigle 1.6 CSVs to
+            <code>/valkyrie/wardrive/</code> on the watch. Plug in over USB and
+            pull them straight into your browser &mdash; no app, no CLI. Files
+            download to your normal Downloads folder, ready for
+            <a href="https://wigle.net" target="_blank" rel="noopener">Wigle.net</a>.
+          </p>
+
+          <div class="wardrive fade-in" data-wardrive>
+            <div class="ewt-msg" data-wd-unsupported hidden>
+              This browser can't talk to the watch over USB. Use desktop
+              <b>Chrome</b>, <b>Edge</b> or <b>Opera</b> (Web Serial isn't
+              available in Safari or Firefox), served over
+              <b>https://</b> or <code>http://localhost</code>.
+            </div>
+
+            <div class="wardrive__panel" data-wd-panel>
+              <div class="wardrive__bar">
+                <button class="btn-primary" type="button" data-wd-connect>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                  Connect &amp; list logs
+                </button>
+                <button class="btn-secondary" type="button" data-wd-refresh hidden>
+                  Refresh
+                </button>
+                <button class="btn-secondary" type="button" data-wd-download-all hidden>
+                  Download all
+                </button>
+                <button class="btn-secondary" type="button" data-wd-disconnect hidden>
+                  Disconnect
+                </button>
+                <span class="wardrive__status" data-wd-status>
+                  Not connected.
+                </span>
+              </div>
+
+              <div class="wardrive__files" data-wd-files></div>
+
+              <details class="wardrive__console">
+                <summary>Activity log</summary>
+                <pre class="wardrive__log" data-wd-log aria-live="polite"></pre>
+              </details>
+            </div>
           </div>
         </div>
       </section>
@@ -465,5 +524,6 @@
     </footer>
 
     <script src="app.js" defer></script>
+    <script src="wardrive.js" defer></script>
   </body>
 </html>

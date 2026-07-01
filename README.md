@@ -13,12 +13,38 @@ sprites, then lets a visitor flash their watch in four steps.
 
 | File / folder | Purpose |
 |---------------|---------|
-| `index.html` | Page markup: hero, interactive watch demo, flash steps, feature cards, footer, and the `<esp-web-install-button>`. |
+| `index.html` | Page markup: hero, interactive watch demo, flash steps, the wardrive-log downloader, feature cards, footer, and the `<esp-web-install-button>`. |
 | `styles.css` | All styling: dark + cyan theme, mobile-first responsive layout, sprite/sweep/pulse animations, ESP Web Tools color variables, reduced-motion fallbacks. |
 | `app.js` | Behavior only (cosmetic): sprite frame-cyclers, the interactive watch-state demo, fade-in on scroll, and the version badge read from `manifest.json`. |
+| `wardrive.js` | The wardrive-log downloader: a dependency-free Web Serial client that speaks the Meshtastic stream framing + XModem protocol to pull `/valkyrie/wardrive/*.csv` off the watch. Independent of ESP Web Tools; opens/closes its own port. |
 | `manifest.json` | Tells ESP Web Tools which image to flash (ESP32-S3, single factory image at offset `0`). The `version` field drives the version badge on the page. |
 | `valkyrie-t-watch-s3.factory.bin` | The firmware image, served from this folder alongside the page. |
 | `animations/` | 88x88 transparent pixel sprites in `start*` (intro) + `*Loop*` (loop) sequences for `sleeping`, `bleScanning`, `wifiScanning`, `wardriving`, `heartbeat`. |
+
+## Wardrive log downloader
+
+The **Pull your wardrive logs** section (`#logs`) lets a visitor copy the Wigle
+CSVs off the watch straight into the browser — no app, no CLI. It is a
+from-scratch JS port of `firmware/bin/valkyrie-wardrive-pull.py`:
+
+- **Transport:** Web Serial (`navigator.serial`), same API ESP Web Tools uses
+  for flashing, but `wardrive.js` opens/closes its own port so the two never
+  fight over it. It does **not** reuse the flash button.
+- **Framing:** the Meshtastic stream protocol — `0x94 0xc3 <lenHi> <lenLo>
+  <protobuf>` — with a byte scanner that skips interleaved debug-log text.
+- **Manifest:** sends `want_config_id = SPECIAL_NONCE_ONLY_CONFIG (69420)` so
+  the device skips the node DB and jumps straight to config → file manifest →
+  complete, then keeps the `FileInfo` entries under `/valkyrie/wardrive/`.
+- **Download:** XModem (mirrors `firmware/src/xmodem.cpp`): host sends
+  `STX seq=0` + path, device streams `SOH` blocks (each CRC16-CCITT checked and
+  `ACK`ed) until `EOT`. Per-file retry + drain handles back-to-back transfers.
+  It never sends `CAN` — the firmware's `CAN` handler deletes the file.
+- **Only the handful of protobuf fields needed are hand-encoded/decoded**, so
+  there is no protobuf runtime and no build step. The encoders/decoders are
+  verified byte-for-byte against the `meshtastic` Python library.
+
+Same requirements as flashing: Chromium-based desktop browser, HTTPS (or
+localhost), and a USB data cable.
 
 Concerns are split across the three top-level files (`index.html` for
 structure, `styles.css` for presentation, `app.js` for behavior) so the page
