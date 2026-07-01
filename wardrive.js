@@ -426,6 +426,10 @@
   /* ---------------------------------------------------------------------- */
   /* UI wiring                                                              */
   /* ---------------------------------------------------------------------- */
+  function canUseWebSerial() {
+    return typeof navigator !== "undefined" && "serial" in navigator && window.isSecureContext;
+  }
+
   function initWardrive() {
     const root = document.querySelector("[data-wardrive]");
     if (!root) return;
@@ -442,11 +446,14 @@
       panel: root.querySelector("[data-wd-panel]"),
     };
 
-    if (!("serial" in navigator)) {
+    if (!canUseWebSerial()) {
       if (els.unsupported) els.unsupported.hidden = false;
       if (els.panel) els.panel.hidden = true;
       return;
     }
+
+    if (els.unsupported) els.unsupported.hidden = true;
+    if (els.panel) els.panel.hidden = false;
 
     let mesh = null;
     let busy = false;

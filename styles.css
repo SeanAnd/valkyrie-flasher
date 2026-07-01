@@ -347,6 +347,11 @@ esp-web-install-button:not(:defined) [slot="not-allowed"] {
   display: none;
 }
 
+/* Author display rules must not override the hidden attribute (see MDN). */
+[hidden] {
+  display: none !important;
+}
+
 /* ESP Web Tools messages (slotted) */
 .ewt-msg {
   display: inline-block;
